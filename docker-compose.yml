@@ -1,0 +1,135 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    container_name: app
+    ports:
+      - "80:80"
+      - "2222:22"
+    volumes:
+      - .:/var/www/html
+    environment:
+      - AUTH=${AUTH:-none}
+      - AUTH_USER=${AUTH_USER:-admin}
+      - AUTH_PASSWORD=${AUTH_PASSWORD:-password}
+    networks:
+      - laravel_network
+    depends_on:
+      - mysql
+      - redis
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    networks:
+      - laravel_network
+    restart: unless-stopped
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: laravel
+      MYSQL_USER: laravel
+      MYSQL_PASSWORD: password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - laravel_network
+    restart: unless-stopped
+
+  authentik-redis:
+    image: redis:alpine
+    container_name: authentik-redis
+    command: --save 60 1 --loglevel warning
+    networks:
+      - laravel_network
+    volumes:
+      - authentik_redis_data:/data
+    restart: unless-stopped
+
+  authentik-postgresql:
+    image: postgres:16-alpine
+    container_name: authentik-postgresql
+    environment:
+      POSTGRES_PASSWORD: authentik
+      POSTGRES_USER: authentik
+      POSTGRES_DB: authentik
+    volumes:
+      - authentik_database:/var/lib/postgresql/data
+    networks:
+      - laravel_network
+    restart: unless-stopped
+
+  authentik-server:
+    image: ghcr.io/goauthentik/server:2024.6.3
+    container_name: authentik-server
+    command: server
+    environment:
+      AUTHENTIK_REDIS__HOST: authentik-redis
+      AUTHENTIK_POSTGRESQL__HOST: authentik-postgresql
+      AUTHENTIK_POSTGRESQL__USER: authentik
+      AUTHENTIK_POSTGRESQL__NAME: authentik
+      AUTHENTIK_POSTGRESQL__PASSWORD: authentik
+      AUTHENTIK_SECRET_KEY: "change-this-to-a-random-secret-key-in-production"
+      AUTHENTIK_ERROR_REPORTING__ENABLED: "false"
+      AUTHENTIK_DISABLE_UPDATE_CHECK: "true"
+      AUTHENTIK_DISABLE_STARTUP_ANALYTICS: "true"
+      AUTHENTIK_AVATARS: "none"
+    volumes:
+      - ./docker/authentik/media:/media
+      - ./docker/authentik/custom-templates:/templates
+    ports:
+      - "9000:9000"
+      - "9443:9443"
+    depends_on:
+      - authentik-postgresql
+      - authentik-redis
+    networks:
+      - laravel_network
+    restart: unless-stopped
+
+  authentik-worker:
+    image: ghcr.io/goauthentik/server:2024.6.3
+    container_name: authentik-worker
+    command: worker
+    environment:
+      AUTHENTIK_REDIS__HOST: authentik-redis
+      AUTHENTIK_POSTGRESQL__HOST: authentik-postgresql
+      AUTHENTIK_POSTGRESQL__USER: authentik
+      AUTHENTIK_POSTGRESQL__NAME: authentik
+      AUTHENTIK_POSTGRESQL__PASSWORD: authentik
+      AUTHENTIK_SECRET_KEY: "change-this-to-a-random-secret-key-in-production"
+      AUTHENTIK_ERROR_REPORTING__ENABLED: "false"
+      AUTHENTIK_DISABLE_UPDATE_CHECK: "true"
+      AUTHENTIK_DISABLE_STARTUP_ANALYTICS: "true"
+      AUTHENTIK_AVATARS: "none"
+    user: root
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./docker/authentik/media:/media
+      - ./docker/authentik/custom-templates:/templates
+      - ./docker/authentik/certs:/certs
+    depends_on:
+      - authentik-postgresql
+      - authentik-redis
+    networks:
+      - laravel_network
+    restart: unless-stopped
+
+networks:
+  laravel_network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+    driver: local
+  authentik_database:
+    driver: local
+  authentik_redis_data:
+    driver: local
