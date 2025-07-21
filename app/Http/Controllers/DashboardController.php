@@ -3,7 +3,10 @@
 namespace LaravelApp\Http\Controllers;
 
 use LaravelApp\Http\Controllers\Controller;
+use LaravelApp\Models\Activity;
+use LaravelApp\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
@@ -12,174 +15,97 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        // Mock data for the dashboard
-        $data = [
-            'user' => [
-                'name' => 'Matt Shadows',
-                'avatar' => 'https://ui-avatars.com/api/?name=Matt+Shadows&background=667eea&color=fff'
-            ],
-            'totalIncome' => 256000,
-            'incomeGrowth' => 25000,
-            'payments' => [
-                'murabahah' => 1.00,
-                'ijarah' => 20198,
-                'musharakah' => 43092,
-                'istisna' => 12662
-            ],
-            'recentTransactions' => [
-                [
-                    'name' => 'Amazon Support',
-                    'date' => '12 Jan 2024',
-                    'time' => '08:00 AM',
-                    'invoice' => 'WWXS302',
-                    'amount' => 0.00,
-                    'fee' => 56,
-                    'status' => 'Success'
-                ],
-                [
-                    'name' => 'Upwork',
-                    'date' => '12 Jan 2024',
-                    'time' => '08:00 AM',
-                    'invoice' => 'WWXS302',
-                    'amount' => 0.00,
-                    'fee' => 56,
-                    'status' => 'Pending'
-                ],
-                [
-                    'name' => 'EA Games',
-                    'date' => '12 Jan 2024',
-                    'time' => '08:00 AM',
-                    'invoice' => 'WWXS302',
-                    'amount' => 0.00,
-                    'fee' => 56,
-                    'status' => 'Pending'
-                ],
-                [
-                    'name' => 'Apple Inc',
-                    'date' => '12 Jan 2024',
-                    'time' => '08:00 AM',
-                    'invoice' => 'WWXS302',
-                    'amount' => 0.00,
-                    'fee' => 56,
-                    'status' => 'Failed'
-                ]
-            ],
-            'quickSendContacts' => [
-                ['name' => 'Matt', 'avatar' => 'https://ui-avatars.com/api/?name=Matt&background=667eea&color=fff'],
-                ['name' => 'Sarah', 'avatar' => 'https://ui-avatars.com/api/?name=Sarah&background=f093fb&color=fff'],
-                ['name' => 'John', 'avatar' => 'https://ui-avatars.com/api/?name=John&background=4facfe&color=fff'],
-                ['name' => 'Emma', 'avatar' => 'https://ui-avatars.com/api/?name=Emma&background=43e97b&color=fff'],
-                ['name' => 'Alex', 'avatar' => 'https://ui-avatars.com/api/?name=Alex&background=feca57&color=fff'],
-                ['name' => 'Lisa', 'avatar' => 'https://ui-avatars.com/api/?name=Lisa&background=ff6b6b&color=fff']
-            ],
-            'balance' => 300359
-        ];
-
-        return view('dashboard', compact('data'));
+        try {
+            $users = User::all();
+            $totalUsers = $users->count();
+            
+            // Calculate growth percentage (last 30 days)
+            $previousCount = User::where('created_at', '<', now()->subDays(30))->count();
+            $growthPercentage = $previousCount > 0 
+                ? round((($totalUsers - $previousCount) / $previousCount) * 100, 1) 
+                : 0;
+            
+            // Get total tokens using a safer method
+            $totalTokens = 0;
+            try {
+                $totalTokens = DB::table('personal_access_tokens')->count();
+            } catch (\Exception $e) {
+                // Fallback if personal_access_tokens table doesn't exist
+                $totalTokens = 0;
+            }
+            
+            // Get activities instead of users for recent activity
+            $activities = Activity::with('user')
+                ->latest()
+                ->take(50)  // Increased to show more activities and ensure all types are represented
+                ->get()
+                ->map(function ($activity) {
+                    return [
+                        'id' => $activity->id,
+                        'type' => ucfirst($activity->type),
+                        'description' => $activity->description,
+                        'user' => $activity->user ? $activity->user->name : 'System',
+                        'created_at' => $activity->created_at->diffForHumans(),
+                        'details' => $activity->details,
+                        'ip_address' => $activity->ip_address,
+                        'status' => $activity->response_status ?? 'N/A'
+                    ];
+                });
+            
+            return view('dashboard', [
+                'totalUsers' => $totalUsers,
+                'growthPercentage' => $growthPercentage,
+                'totalTokens' => $totalTokens,
+                'activities' => $activities
+            ]);
+        } catch (\Exception $e) {
+            // Fallback for development/testing
+            return view('dashboard', [
+                'totalUsers' => 0,
+                'growthPercentage' => 0,
+                'totalTokens' => 0,
+                'activities' => collect([])
+            ]);
+        }
     }
 
     /**
-     * Get chart data for income analytics
+     * Get recent activities
      */
-    public function getIncomeChartData()
+    public function getRecentActivities(Request $request)
     {
-        // Mock chart data - in real app, this would come from database
-        $chartData = [
-            'labels' => ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6', 'Week 7'],
-            'data' => [40000, 60000, 45000, 80000, 65000, 90000, 75000],
-            'growth' => [
-                'current' => 256000,
-                'previous' => 231000,
-                'percentage' => 10.8
-            ]
-        ];
-
-        return response()->json($chartData);
-    }
-
-    /**
-     * Get recent transactions
-     */
-    public function getRecentTransactions(Request $request)
-    {
-        $type = $request->get('type', 'history'); // history or upcoming
-        
-        // Mock data - in real app, query database based on type
-        $transactions = [
-            [
-                'id' => 1,
-                'company' => 'Amazon Support',
-                'date' => '2024-01-12',
-                'time' => '08:00 AM',
-                'invoice' => 'WWXS302',
-                'amount' => 0.00,
-                'fee' => 56,
-                'status' => 'Success',
-                'type' => 'credit'
-            ],
-            [
-                'id' => 2,
-                'company' => 'Upwork',
-                'date' => '2024-01-12',
-                'time' => '08:00 AM',
-                'invoice' => 'WWXS302',
-                'amount' => 0.00,
-                'fee' => 56,
-                'status' => 'Pending',
-                'type' => 'credit'
-            ],
-            [
-                'id' => 3,
-                'company' => 'EA Games',
-                'date' => '2024-01-12',
-                'time' => '08:00 AM',
-                'invoice' => 'WWXS302',
-                'amount' => 0.00,
-                'fee' => 56,
-                'status' => 'Pending',
-                'type' => 'debit'
-            ],
-            [
-                'id' => 4,
-                'company' => 'Apple Inc',
-                'date' => '2024-01-12',
-                'time' => '08:00 AM',
-                'invoice' => 'WWXS302',
-                'amount' => 0.00,
-                'fee' => 56,
-                'status' => 'Failed',
-                'type' => 'debit'
-            ]
-        ];
-
-        return response()->json($transactions);
-    }
-
-    /**
-     * Send money to contact
-     */
-    public function sendMoney(Request $request)
-    {
-        $request->validate([
-            'amount' => 'required|numeric|min:1',
-            'recipient' => 'required|string',
-            'note' => 'nullable|string|max:255'
-        ]);
-
-        // Mock sending money - in real app, process the transaction
-        $transaction = [
-            'id' => rand(1000, 9999),
-            'amount' => $request->amount,
-            'recipient' => $request->recipient,
-            'status' => 'pending',
-            'created_at' => now(),
-            'fee' => $request->amount * 0.01 // 1% fee
-        ];
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Money sent successfully!',
-            'transaction' => $transaction
-        ]);
+        try {
+            $type = $request->get('type', 'recent'); // recent, users, integrations, system
+            
+            $query = Activity::with('user')->latest();
+            
+            // Filter based on type
+            if ($type === 'users') {
+                $query->where('type', Activity::TYPE_USER);
+            } elseif ($type === 'integrations') {
+                $query->where('type', Activity::TYPE_INTEGRATION);
+            } elseif ($type === 'system') {
+                $query->where('type', Activity::TYPE_SYSTEM);
+            }
+            
+            $activities = $query->take(50)
+                ->get()
+                ->map(function ($activity) {
+                    return [
+                        'id' => $activity->id,
+                        'type' => ucfirst($activity->type),
+                        'description' => $activity->description,
+                        'user' => $activity->user ? $activity->user->name : 'System',
+                        'created_at' => $activity->created_at->diffForHumans(),
+                        'details' => $activity->details,
+                        'ip_address' => $activity->ip_address,
+                        'status' => $activity->response_status ?? 'N/A'
+                    ];
+                });
+            
+            return response()->json($activities);
+        } catch (\Exception $e) {
+            return response()->json([]);
+        }
     }
 }

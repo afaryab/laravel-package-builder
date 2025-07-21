@@ -7,6 +7,8 @@
     "require": {
         "php": "^8.3",
         "aacotroneo/laravel-saml2": "^2.1",
+        "blade-ui-kit/blade-heroicons": "^2.6",
+        "blade-ui-kit/blade-icons": "^1.8",
         "dedoc/scramble": "^0.12.23",
         "guzzlehttp/guzzle": "^7.8",
         "laravel/framework": "^11.0",

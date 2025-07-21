@@ -41,13 +41,22 @@ return [
                         'order' => 1,
                         'active' => true,
                     ],
+                    'access_control' => [
+                        'label' => 'Access Control',
+                        'route' => 'access-control.index',
+                        'icon' => 'fas fa-shield-alt',
+                        'description' => 'Manage roles and permissions',
+                        'permission' => 'roles.view',
+                        'order' => 2,
+                        'active' => true,
+                    ],
                     'setup' => [
                         'label' => 'Setup',
                         'route' => 'setup',
                         'icon' => 'fas fa-tools',
                         'description' => 'System configuration and setup',
-                        'permission' => 'setup.view',
-                        'order' => 2,
+                        'permission' => 'settings.access',
+                        'order' => 3,
                         'active' => true,
                         'tabs' => [
                             'authentication' => [
@@ -381,6 +390,8 @@ return [
 
     'app' => [
         'name' => env('APP_NAME', 'Sharia Finance'),
+        'logo_icon' => env('APP_LOGO_ICON', 'fas fa-mosque'),
+        'logo_text' => env('APP_LOGO_TEXT', 'Sharia'),
         'version' => '1.0.0',
         'timezone' => env('APP_TIMEZONE', 'UTC'),
         'locale' => env('APP_LOCALE', 'en'),

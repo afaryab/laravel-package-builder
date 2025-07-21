@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laravel Package Builder</title>
+    <title>{{ config('app.name', 'Laravel') }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100">
     <div class="min-h-screen flex items-center justify-center">
         <div class="max-w-md w-full bg-white rounded-lg shadow-md p-6">
             <div class="text-center">
-                <h1 class="text-3xl font-bold text-gray-900 mb-4">Laravel Package Builder</h1>
+                <h1 class="text-3xl font-bold text-gray-900 mb-4">{{ config('app.name', 'Laravel') }}</h1>
                 <p class="text-gray-600 mb-6">Welcome to your Laravel application with Docker setup</p>
                 
                 <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">

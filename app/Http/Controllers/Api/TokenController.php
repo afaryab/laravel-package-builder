@@ -4,6 +4,7 @@ namespace LaravelApp\Http\Controllers\Api;
 
 use LaravelApp\Http\Controllers\Controller;
 use LaravelApp\Models\ApplicationToken;
+use LaravelApp\Models\User;
 use LaravelApp\Services\ExternalTokenValidationService;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -24,7 +25,12 @@ class TokenController extends Controller
      */
     public function createIntegrationToken(Request $request)
     {
-        Gate::authorize('viewApiDocs'); // Admin permission required
+        // Check if user has permission to create tokens
+        /** @var User|null $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('tokens.create')) {
+            abort(403, 'Unauthorized. You do not have permission to create tokens.');
+        }
 
         $request->validate([
             'name' => 'required|string|max:255',

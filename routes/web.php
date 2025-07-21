@@ -28,9 +28,7 @@ Route::group(['middleware' => 'auth.type'], function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('auth.dynamic');
     
     // Dashboard API routes
-    Route::get('/api/dashboard/income-chart', [DashboardController::class, 'getIncomeChartData'])->middleware('auth.dynamic');
-    Route::get('/api/dashboard/transactions', [DashboardController::class, 'getRecentTransactions'])->middleware('auth.dynamic');
-    Route::post('/api/dashboard/send-money', [DashboardController::class, 'sendMoney'])->middleware('auth.dynamic');
+    Route::get('/dashboard/activities', [DashboardController::class, 'getRecentActivities'])->middleware('auth.dynamic');
 
     $authType = env('AUTH', 'none');
     
@@ -78,23 +76,23 @@ Route::group(['middleware' => 'auth.type'], function () {
     }
 
     // Protected admin routes (available when authenticated)
-    Route::group(['prefix' => 'admin', 'middleware' => 'auth.dynamic'], function () {
+    Route::group(['prefix' => 'admin', 'middleware' => ['auth.dynamic', 'permission:admin.access']], function () {
         Route::get('/', function () {
             return view('admin.dashboard');
         })->name('admin.dashboard');
         
         Route::get('/users', function () {
             return view('admin.users');
-        })->name('admin.users');
+        })->name('admin.users')->middleware('permission:users.view');
         
         Route::get('/tokens', function () {
             return view('admin.tokens');
-        })->name('admin.tokens');
+        })->name('admin.tokens')->middleware('permission:tokens.view');
         
         // Token management routes (admin-only)
-        Route::post('/tokens/integration', [\LaravelApp\Http\Controllers\Api\TokenController::class, 'createIntegrationToken'])->name('admin.tokens.create');
-        Route::delete('/tokens/{token}', [\LaravelApp\Http\Controllers\Api\TokenController::class, 'revokeTokenByAdmin'])->name('admin.tokens.revoke');
-        Route::get('/tokens/list', [\LaravelApp\Http\Controllers\Api\TokenController::class, 'listAllTokens'])->name('admin.tokens.list');
+        Route::post('/tokens/integration', [\LaravelApp\Http\Controllers\Api\TokenController::class, 'createIntegrationToken'])->name('admin.tokens.create')->middleware('permission:tokens.create');
+        Route::delete('/tokens/{token}', [\LaravelApp\Http\Controllers\Api\TokenController::class, 'revokeTokenByAdmin'])->name('admin.tokens.revoke')->middleware('permission:tokens.delete');
+        Route::get('/tokens/list', [\LaravelApp\Http\Controllers\Api\TokenController::class, 'listAllTokens'])->name('admin.tokens.list')->middleware('permission:tokens.view');
     });
 
     // Dashboard routes (available when authenticated)
@@ -133,10 +131,32 @@ Route::group(['middleware' => 'auth.type'], function () {
             Route::get('/', function () {
                 return view('settings.index');
             })->name('settings.index');
+            
             // Users management routes
-            Route::resource('/users', \LaravelApp\Http\Controllers\UsersController::class);
-            Route::patch('/users/{user}/password', [\LaravelApp\Http\Controllers\UsersController::class, 'updatePassword'])->name('users.password');
-            Route::post('/users/{user}/reset-password', [\LaravelApp\Http\Controllers\UsersController::class, 'resetPassword'])->name('users.reset-password');
+            Route::resource('/users', \LaravelApp\Http\Controllers\UsersController::class)->middleware('permission:users.view');
+            Route::patch('/users/{user}/password', [\LaravelApp\Http\Controllers\UsersController::class, 'updatePassword'])->name('users.password')->middleware('permission:users.edit');
+            Route::post('/users/{user}/reset-password', [\LaravelApp\Http\Controllers\UsersController::class, 'resetPassword'])->name('users.reset-password')->middleware('permission:users.edit');
+
+            // Access Control routes
+            Route::prefix('access-control')->name('access-control.')->middleware('permission:roles.view')->group(function () {
+                Route::get('/', [\LaravelApp\Http\Controllers\AccessControlController::class, 'index'])->name('index');
+                Route::get('/users', [\LaravelApp\Http\Controllers\AccessControlController::class, 'users'])->name('users');
+                Route::get('/permissions', [\LaravelApp\Http\Controllers\AccessControlController::class, 'permissions'])->name('permissions');
+                
+                // User role management
+                Route::patch('/users/{user}/role', [\LaravelApp\Http\Controllers\AccessControlController::class, 'updateUserRole'])->name('users.role')->middleware('permission:users.edit');
+                
+                // Role permission management
+                Route::patch('/roles/{role}/permissions', [\LaravelApp\Http\Controllers\AccessControlController::class, 'updateRolePermissions'])->name('roles.permissions')->middleware('permission:roles.edit');
+                Route::patch('/permissions/bulk-update', [\LaravelApp\Http\Controllers\AccessControlController::class, 'bulkUpdatePermissions'])->name('permissions.bulk-update')->middleware('permission:roles.edit');
+                
+                // Toggle status
+                Route::patch('/permissions/{permission}/toggle', [\LaravelApp\Http\Controllers\AccessControlController::class, 'togglePermission'])->name('permissions.toggle')->middleware('permission:roles.edit');
+                Route::patch('/roles/{role}/toggle', [\LaravelApp\Http\Controllers\AccessControlController::class, 'toggleRole'])->name('roles.toggle')->middleware('permission:roles.edit');
+                
+                // Roles CRUD
+                Route::resource('roles', \LaravelApp\Http\Controllers\RoleController::class);
+            });
 
             Route::prefix('setup')->group(function () {
                 // New setup routes
@@ -160,9 +180,7 @@ Route::group(['middleware' => 'auth.type'], function () {
         
         
         // Dashboard API routes
-        Route::get('/api/dashboard/income-chart', [DashboardController::class, 'getIncomeChartData']);
-        Route::get('/api/dashboard/transactions', [DashboardController::class, 'getRecentTransactions']);
-        Route::post('/api/dashboard/send-money', [DashboardController::class, 'sendMoney']);
+        Route::get('/dashboard/activities', [DashboardController::class, 'getRecentActivities']);
         
         // Notification routes
         Route::prefix('notifications')->name('notifications.')->group(function () {

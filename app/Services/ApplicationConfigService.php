@@ -4,6 +4,7 @@ namespace LaravelApp\Services;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
+use LaravelApp\Models\User;
 
 class ApplicationConfigService
 {
@@ -56,9 +57,21 @@ class ApplicationConfigService
      */
     public function hasPermission(string $permission): bool
     {
-        // For now, return true for authenticated users
-        // In a real app, you'd implement proper permission checking
-        return Auth::check();
+        // If no permission is required, allow access
+        if (empty($permission)) {
+            return true;
+        }
+        
+        // Check if user is authenticated
+        if (!Auth::check()) {
+            return false;
+        }
+        
+        /** @var User $user */
+        $user = Auth::user();
+        
+        // Check if user has the required permission
+        return $user->hasPermission($permission);
     }
 
     /**
@@ -142,8 +155,21 @@ class ApplicationConfigService
         $currentRoute = request()->route() ? request()->route()->getName() : '';
         
         // Check if the menu item itself has an active route
-        if (isset($menu['route']) && (request()->routeIs($menu['route']) || request()->routeIs($menu['route'] . '.*'))) {
-            return true;
+        if (isset($menu['route'])) {
+            // Exact match
+            if (request()->routeIs($menu['route'])) {
+                return true;
+            }
+            
+            // Check for child routes (e.g., access-control.* routes)
+            if (request()->routeIs($menu['route'] . '.*')) {
+                return true;
+            }
+            
+            // Special handling for access control - if current route starts with access-control
+            if ($menu['route'] === 'access-control.index' && str_starts_with($currentRoute, 'access-control.')) {
+                return true;
+            }
         }
 
         // Check by URL path matching - support hierarchical URLs

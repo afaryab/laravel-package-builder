@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Dashboard') - {{ config('application.app.name', 'Sharia Finance') }}</title>
+    <title>@yield('title', 'Dashboard') - {{ config('application.app.name', config('app.name', 'Laravel')) }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -41,9 +41,17 @@
                         <div class="flex items-center flex-shrink-0 px-4">
                             <div class="flex items-center">
                                 <div class="bg-white bg-opacity-20 rounded-lg p-2">
-                                    <i class="fas fa-mosque text-white text-xl"></i>
+                                    @php
+                                        $logoIcon = config('application.app.logo_icon', 'fas fa-cube');
+                                        // Check if it's a Font Awesome icon or a Blade icon
+                                        if (str_starts_with($logoIcon, 'fa') || str_contains($logoIcon, 'fa-')) {
+                                            echo '<i class="' . $logoIcon . ' text-white text-xl"></i>';
+                                        } else {
+                                            echo '<x-' . $logoIcon . ' class="w-6 h-6 text-white" />';
+                                        }
+                                    @endphp
                                 </div>
-                                <h1 class="ml-3 text-xl font-bold text-white">Sharia</h1>
+                                <h1 class="ml-3 text-xl font-bold text-white">{{ config('application.app.logo_text', config('app.name', 'App')) }}</h1>
                             </div>
                         </div>
                         <nav class="mt-10 px-4">
@@ -58,8 +66,8 @@
                                                 <i class="{{ $menu['icon'] }} mr-4"></i>
                                                 {{ $menu['label'] }}
                                             </div>
-                                            <i class="fas fa-chevron-down transition-transform duration-200" 
-                                               :class="open ? 'transform rotate-180' : ''"></i>
+                                            <x-heroicon-o-chevron-down class="w-4 h-4 transition-transform duration-200" 
+                                               x-bind:class="open ? 'transform rotate-180' : ''" />
                                         </button>
                                         
                                         <div x-show="open" 
@@ -69,7 +77,7 @@
                                              x-transition:leave="transition ease-in duration-75" 
                                              x-transition:leave-start="opacity-100 transform scale-100" 
                                              x-transition:leave-end="opacity-0 transform scale-95"
-                                             class="mt-1 ml-8 space-y-1">
+                                             class="mt-1 ml-4 space-y-1">
                                             @foreach($menu['submenu'] as $subKey => $submenu)
                                                 <a href="{{ route($submenu['route']) }}" 
                                                    class="group flex items-center px-4 py-2 text-sm font-medium rounded-md {{ $appConfig->isActiveRoute($submenu) ? 'text-white bg-indigo-700' : 'text-indigo-200 hover:text-white hover:bg-indigo-700' }}"
@@ -102,16 +110,24 @@
             <div class="relative flex-1 flex flex-col max-w-xs w-full gradient-bg">
                 <div class="absolute top-0 right-0 -mr-12 pt-2">
                     <button @click="sidebarOpen = false" class="ml-1 flex items-center justify-center h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
-                        <i class="fas fa-times text-white"></i>
+                        <x-heroicon-o-x-mark class="w-6 h-6 text-white" />
                     </button>
                 </div>
                 <div class="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
                     <div class="flex items-center flex-shrink-0 px-4">
                         <div class="flex items-center">
                             <div class="bg-white bg-opacity-20 rounded-lg p-2">
-                                <i class="fas fa-mosque text-white text-xl"></i>
+                                @php
+                                    $logoIcon = config('application.app.logo_icon', 'fas fa-cube');
+                                    // Check if it's a Font Awesome icon or a Blade icon
+                                    if (str_starts_with($logoIcon, 'fa') || str_contains($logoIcon, 'fa-')) {
+                                        echo '<i class="' . $logoIcon . ' text-white text-xl"></i>';
+                                    } else {
+                                        echo '<x-' . $logoIcon . ' class="w-6 h-6 text-white" />';
+                                    }
+                                @endphp
                             </div>
-                            <h1 class="ml-3 text-xl font-bold text-white">Sharia</h1>
+                            <h1 class="ml-3 text-xl font-bold text-white">{{ config('application.app.logo_text', config('app.name', 'App')) }}</h1>
                         </div>
                     </div>
                     <nav class="mt-10 px-4">
@@ -126,8 +142,8 @@
                                             <i class="{{ $menu['icon'] }} mr-4"></i>
                                             {{ $menu['label'] }}
                                         </div>
-                                        <i class="fas fa-chevron-down transition-transform duration-200" 
-                                           :class="open ? 'transform rotate-180' : ''"></i>
+                                        <x-heroicon-o-chevron-down class="w-4 h-4 transition-transform duration-200" 
+                                           x-bind:class="open ? 'transform rotate-180' : ''" />
                                     </button>
                                     
                                     <div x-show="open" 
@@ -137,7 +153,7 @@
                                          x-transition:leave="transition ease-in duration-75" 
                                          x-transition:leave-start="opacity-100 transform scale-100" 
                                          x-transition:leave-end="opacity-0 transform scale-95"
-                                         class="mt-1 ml-8 space-y-1">
+                                         class="mt-1 ml-4 space-y-1">
                                         @foreach($menu['submenu'] as $subKey => $submenu)
                                             <a href="{{ route($submenu['route']) }}" 
                                                class="group flex items-center px-4 py-2 text-sm font-medium rounded-md {{ $appConfig->isActiveRoute($submenu) ? 'text-white bg-indigo-700' : 'text-indigo-200 hover:text-white hover:bg-indigo-700' }}"
@@ -170,12 +186,12 @@
                 <div class="flex-1 px-4 flex justify-between items-center">
                     <div class="flex items-center">
                         <button @click="sidebarOpen = true" class="md:hidden text-gray-500 hover:text-gray-900">
-                            <i class="fas fa-bars text-xl"></i>
+                            <x-heroicon-o-bars-3 class="w-5 h-5" />
                         </button>
                         <div class="ml-4 flex items-center md:ml-6">
                             <div class="relative">
                                 <input type="text" placeholder="Search" class="bg-gray-100 rounded-full py-2 px-4 pl-10 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white">
-                                <i class="fas fa-search absolute left-3 top-2.5 text-gray-400 text-sm"></i>
+                                <x-heroicon-o-magnifying-glass class="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
                             </div>
                         </div>
                     </div>
@@ -184,7 +200,7 @@
                         <div class="relative mr-3" x-data="{ open: false, unreadCount: {{ auth()->user()->unread_notifications_count }} }">
                             <button @click="open = !open; if (open) loadNotifications()" 
                                     class="relative bg-gray-100 p-2 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                <i class="fas fa-bell"></i>
+                                <x-heroicon-o-bell class="w-5 h-5" />
                                 <span x-show="unreadCount > 0" 
                                       x-text="unreadCount" 
                                       class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
@@ -208,9 +224,16 @@
                                     </div>
                                     <div id="notifications-dropdown-content">
                                         <div class="px-4 py-8 text-center">
-                                            <i class="fas fa-spinner fa-spin text-gray-400 text-xl"></i>
+                                            <x-heroicon-o-arrow-path class="w-5 h-5 animate-spin text-gray-400 mx-auto" />
                                             <p class="text-sm text-gray-500 mt-2">Loading...</p>
                                         </div>
+                                    </div>
+                                    <div class="border-t border-gray-200">
+                                        <a href="{{ route('notifications.index') }}" 
+                                           class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 text-center">
+                                            <x-heroicon-o-bell class="w-4 h-4 inline mr-2" />
+                                            View All Notifications
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -220,7 +243,7 @@
                                 <button @click="open = !open" class="max-w-xs bg-white flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                     <img class="h-8 w-8 rounded-full" src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name ?? 'User') }}&background=667eea&color=fff" alt="{{ auth()->user()->name ?? 'User' }}">
                                     <span class="ml-3 text-gray-700 text-sm font-medium">{{ auth()->user()->name ?? 'User' }}</span>
-                                    <i class="fas fa-chevron-down ml-2 text-gray-400 text-xs"></i>
+                                    <x-heroicon-o-chevron-down class="ml-2 w-3 h-3 text-gray-400" />
                                 </button>
                             </div>
                             <div x-show="open" @click.away="open = false" x-transition class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
@@ -229,10 +252,10 @@
                                     <div class="relative">
                                         <a href="{{ route('profile.index') }}" class="w-full flex items-center justify-between px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                             <div class="flex items-center">
-                                                <i class="fas fa-user mr-2"></i>
+                                                <x-heroicon-o-user class="w-4 h-4 mr-2" />
                                                 Profile
                                             </div>
-                                            <i class="fas fa-chevron-right text-gray-400 text-xs transition-transform" :class="profileOpen ? 'transform rotate-90' : ''"></i>
+                                            <x-heroicon-o-chevron-right class="w-3 h-3 text-gray-400" />
                                         </a>
                                     </div>
                                     
@@ -241,7 +264,7 @@
                                     
                                     <!-- Settings -->
                                     <a href="{{ route('settings.index') }}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                        <i class="fas fa-cog mr-2"></i>
+                                        <x-heroicon-o-cog-6-tooth class="w-4 h-4 mr-2" />
                                         Settings
                                     </a>
                                     
@@ -252,7 +275,7 @@
                                     <form method="POST" action="{{ route('logout') }}" class="block">
                                         @csrf
                                         <button type="submit" class="w-full flex items-center text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                            <i class="fas fa-sign-out-alt mr-2"></i>
+                                            <x-heroicon-o-arrow-right-on-rectangle class="w-4 h-4 mr-2" />
                                             Sign out
                                         </button>
                                     </form>

@@ -14,16 +14,16 @@
         <nav class="-mb-px flex space-x-8 px-6">
             <a href="{{ route('setup') }}" 
                class="py-4 px-1 border-b-2 {{ request()->routeIs('setup') ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }} font-medium text-sm whitespace-nowrap">
-                <i class="fas fa-home mr-2"></i>
+                <x-heroicon-o-home class="w-4 h-4 mr-2 inline" />
             </a>
             <a href="{{ route('authentication') }}" 
                class="py-4 px-1 border-b-2 {{ request()->routeIs('authentication') ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }} font-medium text-sm whitespace-nowrap">
-                <i class="fas fa-key mr-2"></i>
+                <x-heroicon-o-key class="w-4 h-4 mr-2 inline" />
                 Authentication
             </a>
             <a href="{{ route('tokens') }}" 
                class="py-4 px-1 border-b-2 {{ request()->routeIs('tokens') ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }} font-medium text-sm whitespace-nowrap">
-                <i class="fas fa-plug mr-2"></i>
+                <x-heroicon-o-cpu-chip class="w-4 h-4 mr-2 inline" />
                 Integration Tokens
             </a>
         </nav>
@@ -35,7 +35,7 @@
             <div class="bg-gray-50 rounded-lg p-6 border border-gray-200">
                 <div class="flex items-center mb-4">
                     <div class="flex-shrink-0">
-                        <i class="fas fa-key text-blue-500 text-2xl"></i>
+                        <x-heroicon-o-key class="w-8 h-8 text-blue-500" />
                     </div>
                     <div class="ml-4">
                         <h3 class="text-lg font-medium text-gray-900">Authentication Setup</h3>
@@ -74,7 +74,7 @@
             <div class="bg-gray-50 rounded-lg p-6 border border-gray-200">
                 <div class="flex items-center mb-4">
                     <div class="flex-shrink-0">
-                        <i class="fas fa-plug text-green-500 text-2xl"></i>
+                        <x-heroicon-o-cpu-chip class="w-8 h-8 text-green-500" />
                     </div>
                     <div class="ml-4">
                         <h3 class="text-lg font-medium text-gray-900">Integration Tokens</h3>
@@ -111,7 +111,7 @@
                 <button type="button" class="relative group bg-white p-6 focus-within:ring-2 focus-within:ring-inset focus-within:ring-blue-500 border border-gray-200 rounded-lg hover:bg-gray-50">
                     <div>
                         <span class="rounded-lg inline-flex p-3 bg-blue-50 text-blue-700 ring-4 ring-white">
-                            <i class="fas fa-sync-alt"></i>
+                            <x-heroicon-o-arrow-path class="w-5 h-5" />
                         </span>
                     </div>
                     <div class="mt-4">
@@ -127,7 +127,7 @@
                 <button type="button" class="relative group bg-white p-6 focus-within:ring-2 focus-within:ring-inset focus-within:ring-blue-500 border border-gray-200 rounded-lg hover:bg-gray-50">
                     <div>
                         <span class="rounded-lg inline-flex p-3 bg-green-50 text-green-700 ring-4 ring-white">
-                            <i class="fas fa-shield-alt"></i>
+                            <x-heroicon-o-shield-check class="w-5 h-5" />
                         </span>
                     </div>
                     <div class="mt-4">
@@ -143,7 +143,7 @@
                 <button type="button" class="relative group bg-white p-6 focus-within:ring-2 focus-within:ring-inset focus-within:ring-blue-500 border border-gray-200 rounded-lg hover:bg-gray-50">
                     <div>
                         <span class="rounded-lg inline-flex p-3 bg-yellow-50 text-yellow-700 ring-4 ring-white">
-                            <i class="fas fa-download"></i>
+                            <x-heroicon-o-arrow-down-tray class="w-5 h-5" />
                         </span>
                     </div>
                     <div class="mt-4">
@@ -159,7 +159,7 @@
                 <button type="button" class="relative group bg-white p-6 focus-within:ring-2 focus-within:ring-inset focus-within:ring-blue-500 border border-gray-200 rounded-lg hover:bg-gray-50">
                     <div>
                         <span class="rounded-lg inline-flex p-3 bg-purple-50 text-purple-700 ring-4 ring-white">
-                            <i class="fas fa-cogs"></i>
+                            <x-heroicon-o-cog-6-tooth class="w-5 h-5" />
                         </span>
                     </div>
                     <div class="mt-4">

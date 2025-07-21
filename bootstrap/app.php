@@ -19,7 +19,12 @@ return Application::configure(basePath: dirname(__DIR__))
             'auth.basic' => LaravelApp\Http\Middleware\BasicAuthMiddleware::class,
             'token.auth' => LaravelApp\Http\Middleware\TokenAuthMiddleware::class,
             'auth.dynamic' => LaravelApp\Http\Middleware\AuthenticateWithAuthType::class,
+            'log.activity' => LaravelApp\Http\Middleware\LogActivity::class,
+            'permission' => LaravelApp\Http\Middleware\CheckPermission::class,
         ]);
+        
+        // Add LogActivity middleware globally to capture all requests
+        $middleware->append(LaravelApp\Http\Middleware\LogActivity::class);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

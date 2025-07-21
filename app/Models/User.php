@@ -17,6 +17,7 @@ class User extends Authenticatable
         'password',
         'auth_type',
         'external_id',
+        'role_id',
     ];
 
     protected $hidden = [
@@ -28,6 +29,60 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    /**
+     * Get the user's role.
+     */
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
+
+    /**
+     * Check if user has a specific permission.
+     */
+    public function hasPermission(string $permission): bool
+    {
+        if (!$this->role) {
+            return false;
+        }
+
+        return $this->role->hasPermission($permission);
+    }
+
+    /**
+     * Check if user has any of the given permissions.
+     */
+    public function hasAnyPermission(array $permissions): bool
+    {
+        foreach ($permissions as $permission) {
+            if ($this->hasPermission($permission)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Check if user has all of the given permissions.
+     */
+    public function hasAllPermissions(array $permissions): bool
+    {
+        foreach ($permissions as $permission) {
+            if (!$this->hasPermission($permission)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Check if user has a specific role.
+     */
+    public function hasRole(string $roleName): bool
+    {
+        return $this->role && $this->role->name === $roleName;
+    }
 
     /**
      * Get the user's notifications.
