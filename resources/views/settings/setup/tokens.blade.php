@@ -19,162 +19,165 @@
         <!-- Tab Navigation -->
         <div class="border-b border-gray-200">
             <nav class="-mb-px flex space-x-8 px-6">
-                <a href="{{ route('authentication') }}" 
+                <a href="{{ route('setup') }}" 
                 class="py-4 px-1 border-b-2 {{ request()->routeIs('setup') ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }} font-medium text-sm whitespace-nowrap">
                     <i class="fas fa-home mr-2"></i>
                 </a>
                 <a href="{{ route('authentication') }}" 
-                class="py-4 px-1 border-b-2 {{ request()->routeIs('settings.authentication') ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }} font-medium text-sm whitespace-nowrap">
+                class="py-4 px-1 border-b-2 {{ request()->routeIs('authentication') ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }} font-medium text-sm whitespace-nowrap">
                     <i class="fas fa-key mr-2"></i>
                     Authentication
                 </a>
                 <a href="{{ route('tokens') }}" 
-                class="py-4 px-1 border-b-2 {{ request()->routeIs('settings.tokens') ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }} font-medium text-sm whitespace-nowrap">
+                class="py-4 px-1 border-b-2 {{ request()->routeIs('tokens') ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }} font-medium text-sm whitespace-nowrap">
                     <i class="fas fa-plug mr-2"></i>
                     Integration Tokens
                 </a>
             </nav>
         </div>
-
-        {{-- Success/Error Messages --}}
-        @if(session('success'))
-            <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <svg class="h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                        </svg>
-                    </div>
-                    <div class="ml-3">
-                        <p class="text-sm text-green-800">{{ session('success') }}</p>
+        <div class="max-w-5xl mx-auto p-6">
+            {{-- Success/Error Messages --}}
+            @if(session('success'))
+                <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <svg class="h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm text-green-800">{{ session('success') }}</p>
+                        </div>
                     </div>
                 </div>
-            </div>
-        @endif
+            @endif
 
-        @if(session('new_token'))
-            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
-                <div class="flex items-start">
-                    <div class="flex-shrink-0">
-                        <svg class="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
-                        </svg>
-                    </div>
-                    <div class="ml-3 flex-1">
-                        <h3 class="text-sm font-medium text-yellow-800">New Token Created: {{ session('token_name') }}</h3>
-                        <div class="mt-2">
-                            <p class="text-sm text-yellow-700">⚠️ <strong>Store this token securely. It will not be shown again.</strong></p>
-                            <div class="mt-2 bg-gray-900 text-green-400 p-3 rounded font-mono text-sm break-all">
-                                {{ session('new_token') }}
+            @if(session('new_token'))
+                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0">
+                            <svg class="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <div class="ml-3 flex-1">
+                            <h3 class="text-sm font-medium text-yellow-800">New Token Created: {{ session('token_name') }}</h3>
+                            <div class="mt-2">
+                                <p class="text-sm text-yellow-700">⚠️ <strong>Store this token securely. It will not be shown again.</strong></p>
+                                <div class="mt-2 bg-gray-900 text-green-400 p-3 rounded font-mono text-sm break-all">
+                                    {{ session('new_token') }}
+                                </div>
+                                <button onclick="copyToClipboard('{{ session('new_token') }}')" class="mt-2 inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded text-yellow-700 bg-yellow-100 hover:bg-yellow-200">
+                                    Copy Token
+                                </button>
                             </div>
-                            <button onclick="copyToClipboard('{{ session('new_token') }}')" class="mt-2 inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded text-yellow-700 bg-yellow-100 hover:bg-yellow-200">
-                                Copy Token
-                            </button>
                         </div>
                     </div>
                 </div>
-            </div>
-        @endif
+            @endif
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {{-- Create Token Form --}}
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <h2 class="text-xl font-semibold text-gray-900 mb-4">Create Integration Token</h2>
-                
-                <form action="{{ route('admin.tokens.create') }}" method="POST" class="space-y-4">
-                    @csrf
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                {{-- Create Token Form --}}
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-4">Create Integration Token</h2>
                     
-                    <div>
-                        <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Token Name</label>
-                        <input type="text" id="name" name="name" required 
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                               placeholder="e.g., Production API Integration">
-                        @error('name')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Permissions (Scopes)</label>
-                        <div class="space-y-2">
-                            <label class="flex items-center">
-                                <input type="checkbox" name="scopes[]" value="integration:read" checked class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
-                                <span class="ml-2 text-sm text-gray-700">integration:read - Read access for integrations</span>
-                            </label>
-                            <label class="flex items-center">
-                                <input type="checkbox" name="scopes[]" value="integration:write" checked class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
-                                <span class="ml-2 text-sm text-gray-700">integration:write - Write access for integrations</span>
-                            </label>
-                            <label class="flex items-center">
-                                <input type="checkbox" name="scopes[]" value="user:read" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
-                                <span class="ml-2 text-sm text-gray-700">user:read - Read user information</span>
-                            </label>
-                            <label class="flex items-center">
-                                <input type="checkbox" name="scopes[]" value="users:read" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
-                                <span class="ml-2 text-sm text-gray-700">users:read - Read all users (admin)</span>
-                            </label>
+                    <form action="{{ route('admin.tokens.create') }}" method="POST" class="space-y-4">
+                        @csrf
+                        
+                        <div>
+                            <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Token Name</label>
+                            <input type="text" id="name" name="name" required 
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                placeholder="e.g., Production API Integration">
+                            @error('name')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
                         </div>
-                        @error('scopes')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
 
-                    <div>
-                        <label for="expires_at" class="block text-sm font-medium text-gray-700 mb-1">Expiration Date (Optional)</label>
-                        <input type="datetime-local" id="expires_at" name="expires_at" 
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                        <p class="mt-1 text-xs text-gray-500">Leave empty for no expiration</p>
-                        @error('expires_at')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Permissions (Scopes)</label>
+                            <div class="space-y-2">
+                                <label class="flex items-center">
+                                    <input type="checkbox" name="scopes[]" value="integration:read" checked class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                    <span class="ml-2 text-sm text-gray-700">integration:read - Read access for integrations</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" name="scopes[]" value="integration:write" checked class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                    <span class="ml-2 text-sm text-gray-700">integration:write - Write access for integrations</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" name="scopes[]" value="user:read" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                    <span class="ml-2 text-sm text-gray-700">user:read - Read user information</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" name="scopes[]" value="users:read" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                    <span class="ml-2 text-sm text-gray-700">users:read - Read all users (admin)</span>
+                                </label>
+                            </div>
+                            @error('scopes')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
 
-                    <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200">
-                        Create Integration Token
-                    </button>
-                </form>
-            </div>
+                        <div>
+                            <label for="expires_at" class="block text-sm font-medium text-gray-700 mb-1">Expiration Date (Optional)</label>
+                            <input type="datetime-local" id="expires_at" name="expires_at" 
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            <p class="mt-1 text-xs text-gray-500">Leave empty for no expiration</p>
+                            @error('expires_at')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
 
-            {{-- Security Notice --}}
-            <div class="bg-red-50 rounded-lg shadow-md p-6">
-                <h2 class="text-xl font-semibold text-red-800 mb-4">🔒 Security Notice</h2>
-                
-                <div class="space-y-3 text-sm text-red-700">
-                    <p><strong>Integration tokens can only be created here</strong> - not through the API - for security reasons.</p>
+                        <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200">
+                            Create Integration Token
+                        </button>
+                    </form>
+                </div>
+
+                {{-- Security Notice --}}
+                <div class="bg-red-50 rounded-lg shadow-md p-6">
+                    <h2 class="text-xl font-semibold text-red-800 mb-4">🔒 Security Notice</h2>
                     
-                    <p><strong>Token Security:</strong></p>
-                    <ul class="list-disc list-inside space-y-1 ml-2">
-                        <li>Tokens are only shown once during creation</li>
-                        <li>Store tokens securely (environment variables, vault, etc.)</li>
-                        <li>Never commit tokens to version control</li>
-                        <li>Use specific scopes - avoid overprivileged tokens</li>
-                        <li>Set expiration dates when possible</li>
-                        <li>Revoke unused or compromised tokens immediately</li>
-                    </ul>
+                    <div class="space-y-3 text-sm text-red-700">
+                        <p><strong>Integration tokens can only be created here</strong> - not through the API - for security reasons.</p>
+                        
+                        <p><strong>Token Security:</strong></p>
+                        <ul class="list-disc list-inside space-y-1 ml-2">
+                            <li>Tokens are only shown once during creation</li>
+                            <li>Store tokens securely (environment variables, vault, etc.)</li>
+                            <li>Never commit tokens to version control</li>
+                            <li>Use specific scopes - avoid overprivileged tokens</li>
+                            <li>Set expiration dates when possible</li>
+                            <li>Revoke unused or compromised tokens immediately</li>
+                        </ul>
 
-                    <p><strong>Usage:</strong></p>
-                    <ul class="list-disc list-inside space-y-1 ml-2">
-                        <li>Include in API requests: <code>Authorization: Bearer {token}</code></li>
-                        <li>Use HTTPS in production environments</li>
-                        <li>Monitor token usage in the list below</li>
-                    </ul>
+                        <p><strong>Usage:</strong></p>
+                        <ul class="list-disc list-inside space-y-1 ml-2">
+                            <li>Include in API requests: <code>Authorization: Bearer {token}</code></li>
+                            <li>Use HTTPS in production environments</li>
+                            <li>Monitor token usage in the list below</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        {{-- Token List --}}
-        <div class="mt-8 bg-white rounded-lg shadow-md">
-            <div class="px-6 py-4 border-b border-gray-200">
-                <h2 class="text-xl font-semibold text-gray-900">All Tokens</h2>
-                <p class="text-sm text-gray-600">All integration and user tokens in the system</p>
-            </div>
-            
-            <div id="tokens-list" class="p-6">
-                <div class="flex items-center justify-center py-8">
-                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                    <span class="ml-2 text-gray-600">Loading tokens...</span>
+            {{-- Token List --}}
+            <div class="mt-8 bg-white rounded-lg shadow-md">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <h2 class="text-xl font-semibold text-gray-900">All Tokens</h2>
+                    <p class="text-sm text-gray-600">All integration and user tokens in the system</p>
+                </div>
+                
+                <div id="tokens-list" class="p-6">
+                    <div class="flex items-center justify-center py-8">
+                        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                        <span class="ml-2 text-gray-600">Loading tokens...</span>
+                    </div>
                 </div>
             </div>
+
+
         </div>
 
 </div>

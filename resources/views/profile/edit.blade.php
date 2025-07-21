@@ -1,10 +1,5 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Settings - Sharia Finance')
-
-@section('content')
-@extends('layouts.dashboard')
-
 @section('title', 'Settings')
 
 @section('content')

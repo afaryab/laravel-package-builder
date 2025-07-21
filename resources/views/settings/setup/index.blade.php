@@ -12,24 +12,24 @@
     <!-- Tab Navigation -->
     <div class="border-b border-gray-200">
         <nav class="-mb-px flex space-x-8 px-6">
-            <a href="{{ route('authentication') }}" 
+            <a href="{{ route('setup') }}" 
                class="py-4 px-1 border-b-2 {{ request()->routeIs('setup') ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }} font-medium text-sm whitespace-nowrap">
                 <i class="fas fa-home mr-2"></i>
             </a>
             <a href="{{ route('authentication') }}" 
-               class="py-4 px-1 border-b-2 {{ request()->routeIs('settings.authentication') ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }} font-medium text-sm whitespace-nowrap">
+               class="py-4 px-1 border-b-2 {{ request()->routeIs('authentication') ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }} font-medium text-sm whitespace-nowrap">
                 <i class="fas fa-key mr-2"></i>
                 Authentication
             </a>
             <a href="{{ route('tokens') }}" 
-               class="py-4 px-1 border-b-2 {{ request()->routeIs('settings.tokens') ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }} font-medium text-sm whitespace-nowrap">
+               class="py-4 px-1 border-b-2 {{ request()->routeIs('tokens') ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }} font-medium text-sm whitespace-nowrap">
                 <i class="fas fa-plug mr-2"></i>
                 Integration Tokens
             </a>
         </nav>
     </div>
 
-    <div class="p-6">
+    <div class="max-w-5xl mx-auto p-6">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Authentication Setup Card -->
             <div class="bg-gray-50 rounded-lg p-6 border border-gray-200">
