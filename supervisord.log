@@ -656,3 +656,82 @@
 2025-07-21 06:25:37,453 INFO success: nginx entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
 2025-07-21 06:25:37,453 INFO success: php-fpm entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
 2025-07-21 06:25:37,454 INFO success: sshd entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-07-21 06:47:16,283 WARN received SIGQUIT indicating exit request
+2025-07-21 06:47:16,287 INFO waiting for cron, laravel-worker_00, laravel-worker_01, nginx, php-fpm, sshd to die
+2025-07-21 06:47:16,293 INFO stopped: sshd (exit status 0)
+2025-07-21 06:47:16,327 INFO stopped: php-fpm (exit status 0)
+2025-07-21 06:47:16,371 INFO stopped: nginx (exit status 0)
+2025-07-21 06:47:16,411 INFO stopped: laravel-worker_00 (exit status 0)
+2025-07-21 06:47:16,416 INFO stopped: laravel-worker_01 (exit status 0)
+2025-07-21 06:47:16,416 WARN stopped: cron (terminated by SIGTERM)
+2025-07-21 06:47:20,480 INFO Set uid to user 0 succeeded
+2025-07-21 06:47:20,484 INFO RPC interface 'supervisor' initialized
+2025-07-21 06:47:20,484 CRIT Server 'unix_http_server' running without any HTTP authentication checking
+2025-07-21 06:47:20,484 INFO supervisord started with pid 1
+2025-07-21 06:47:21,488 INFO spawned: 'cron' with pid 45
+2025-07-21 06:47:21,490 INFO spawned: 'laravel-worker_00' with pid 46
+2025-07-21 06:47:21,491 INFO spawned: 'laravel-worker_01' with pid 47
+2025-07-21 06:47:21,493 INFO spawned: 'nginx' with pid 48
+2025-07-21 06:47:21,495 INFO spawned: 'php-fpm' with pid 49
+2025-07-21 06:47:21,497 INFO spawned: 'sshd' with pid 50
+2025-07-21 06:47:21,667 WARN exited: laravel-worker_00 (exit status 1; not expected)
+2025-07-21 06:47:21,670 WARN exited: laravel-worker_01 (exit status 1; not expected)
+2025-07-21 06:47:22,672 INFO success: cron entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-07-21 06:47:22,676 INFO spawned: 'laravel-worker_00' with pid 69
+2025-07-21 06:47:22,679 INFO spawned: 'laravel-worker_01' with pid 70
+2025-07-21 06:47:22,680 INFO success: nginx entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-07-21 06:47:22,680 INFO success: php-fpm entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-07-21 06:47:22,681 INFO success: sshd entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-07-21 06:47:22,839 WARN exited: laravel-worker_00 (exit status 1; not expected)
+2025-07-21 06:47:22,847 WARN exited: laravel-worker_01 (exit status 1; not expected)
+2025-07-21 06:47:24,866 INFO spawned: 'laravel-worker_00' with pid 79
+2025-07-21 06:47:24,869 INFO spawned: 'laravel-worker_01' with pid 80
+2025-07-21 06:47:25,044 WARN exited: laravel-worker_00 (exit status 1; not expected)
+2025-07-21 06:47:25,044 WARN exited: laravel-worker_01 (exit status 1; not expected)
+2025-07-21 06:47:28,055 INFO spawned: 'laravel-worker_00' with pid 89
+2025-07-21 06:47:28,059 INFO spawned: 'laravel-worker_01' with pid 90
+2025-07-21 06:47:28,234 WARN exited: laravel-worker_00 (exit status 1; not expected)
+2025-07-21 06:47:28,236 WARN exited: laravel-worker_01 (exit status 1; not expected)
+2025-07-21 06:47:29,239 INFO gave up: laravel-worker_00 entered FATAL state, too many start retries too quickly
+2025-07-21 06:47:29,240 INFO gave up: laravel-worker_01 entered FATAL state, too many start retries too quickly
+2025-07-21 06:48:57,013 WARN received SIGQUIT indicating exit request
+2025-07-21 06:48:57,016 INFO waiting for cron, nginx, php-fpm, sshd to die
+2025-07-21 06:48:57,023 INFO stopped: sshd (exit status 0)
+2025-07-21 06:48:58,053 INFO stopped: php-fpm (exit status 0)
+2025-07-21 06:48:58,089 INFO stopped: nginx (exit status 0)
+2025-07-21 06:48:59,099 WARN stopped: cron (terminated by SIGTERM)
+2025-07-21 06:49:03,143 INFO Set uid to user 0 succeeded
+2025-07-21 06:49:03,146 INFO RPC interface 'supervisor' initialized
+2025-07-21 06:49:03,146 CRIT Server 'unix_http_server' running without any HTTP authentication checking
+2025-07-21 06:49:03,146 INFO supervisord started with pid 1
+2025-07-21 06:49:04,150 INFO spawned: 'cron' with pid 32
+2025-07-21 06:49:04,151 INFO spawned: 'laravel-worker_00' with pid 33
+2025-07-21 06:49:04,153 INFO spawned: 'laravel-worker_01' with pid 34
+2025-07-21 06:49:04,155 INFO spawned: 'nginx' with pid 35
+2025-07-21 06:49:04,159 INFO spawned: 'php-fpm' with pid 36
+2025-07-21 06:49:04,164 INFO spawned: 'sshd' with pid 37
+2025-07-21 06:49:05,204 INFO success: cron entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-07-21 06:49:05,206 INFO success: laravel-worker_00 entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-07-21 06:49:05,208 INFO success: laravel-worker_01 entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-07-21 06:49:05,208 INFO success: nginx entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-07-21 06:49:05,209 INFO success: php-fpm entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-07-21 06:49:05,209 INFO success: sshd entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-07-21 07:42:56,371 INFO reaped unknown pid 146 (terminated by SIGTERM)
+2025-07-21 07:49:05,688 INFO exited: laravel-worker_00 (exit status 0; expected)
+2025-07-21 07:49:05,690 INFO exited: laravel-worker_01 (exit status 0; expected)
+2025-07-21 07:49:05,703 INFO spawned: 'laravel-worker_00' with pid 148
+2025-07-21 07:49:05,707 INFO spawned: 'laravel-worker_01' with pid 149
+2025-07-21 07:49:06,713 INFO success: laravel-worker_00 entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-07-21 07:49:06,714 INFO success: laravel-worker_01 entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-07-21 08:49:08,085 INFO exited: laravel-worker_00 (exit status 0; expected)
+2025-07-21 08:49:08,087 INFO exited: laravel-worker_01 (exit status 0; expected)
+2025-07-21 08:49:08,099 INFO spawned: 'laravel-worker_00' with pid 190
+2025-07-21 08:49:08,105 INFO spawned: 'laravel-worker_01' with pid 191
+2025-07-21 08:49:09,112 INFO success: laravel-worker_00 entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-07-21 08:49:09,114 INFO success: laravel-worker_01 entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-07-21 09:49:09,129 INFO exited: laravel-worker_00 (exit status 0; expected)
+2025-07-21 09:49:09,130 INFO exited: laravel-worker_01 (exit status 0; expected)
+2025-07-21 09:49:10,144 INFO spawned: 'laravel-worker_00' with pid 252
+2025-07-21 09:49:10,147 INFO spawned: 'laravel-worker_01' with pid 253
+2025-07-21 09:49:11,151 INFO success: laravel-worker_00 entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-07-21 09:49:11,151 INFO success: laravel-worker_01 entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)

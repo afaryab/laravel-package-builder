@@ -1,13 +1,39 @@
-@extends('layouts.app')
+@extends('layouts.dashboard')
 
 @section('title', 'Token Management')
 
 @section('content')
-<div class="container mx-auto px-4 py-8">
-    <div class="max-w-6xl mx-auto">
-        <div class="mb-8">
-            <h1 class="text-3xl font-bold text-gray-900 mb-2">Integration Token Management</h1>
-            <p class="text-gray-600">Create and manage integration tokens for API access. These tokens can only be created through this admin interface for security.</p>
+<div class="bg-white shadow-sm rounded-lg">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <div class="flex items-center">
+                <a href="{{ route('setup') }}" class="text-gray-400 hover:text-gray-600 mr-4">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-900">Authentication Setup</h1>
+                    <p class="mt-1 text-sm text-gray-600">Configure authentication providers and security settings</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="border-b border-gray-200">
+            <nav class="-mb-px flex space-x-8 px-6">
+                <a href="{{ route('authentication') }}" 
+                class="py-4 px-1 border-b-2 {{ request()->routeIs('setup') ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }} font-medium text-sm whitespace-nowrap">
+                    <i class="fas fa-home mr-2"></i>
+                </a>
+                <a href="{{ route('authentication') }}" 
+                class="py-4 px-1 border-b-2 {{ request()->routeIs('settings.authentication') ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }} font-medium text-sm whitespace-nowrap">
+                    <i class="fas fa-key mr-2"></i>
+                    Authentication
+                </a>
+                <a href="{{ route('tokens') }}" 
+                class="py-4 px-1 border-b-2 {{ request()->routeIs('settings.tokens') ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }} font-medium text-sm whitespace-nowrap">
+                    <i class="fas fa-plug mr-2"></i>
+                    Integration Tokens
+                </a>
+            </nav>
         </div>
 
         {{-- Success/Error Messages --}}
@@ -150,7 +176,7 @@
                 </div>
             </div>
         </div>
-    </div>
+
 </div>
 
 <script>

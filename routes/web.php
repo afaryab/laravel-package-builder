@@ -6,6 +6,7 @@ use LaravelApp\Http\Controllers\Auth\AuthController;
 use LaravelApp\Http\Controllers\Auth\OAuthController;
 use LaravelApp\Http\Controllers\Auth\SamlController;
 use LaravelApp\Http\Controllers\DashboardController;
+use LaravelApp\Http\Controllers\NotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -68,6 +69,14 @@ Route::group(['middleware' => 'auth.type'], function () {
         Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     }
 
+    // Password reset routes (only for internal auth)
+    if ($authType === 'internal') {
+        Route::get('/forgot-password', [\LaravelApp\Http\Controllers\Auth\PasswordResetController::class, 'showLinkRequestForm'])->name('password.request');
+        Route::post('/forgot-password', [\LaravelApp\Http\Controllers\Auth\PasswordResetController::class, 'sendResetLinkEmail'])->name('password.email');
+        Route::get('/reset-password/{token}', [\LaravelApp\Http\Controllers\Auth\PasswordResetController::class, 'showResetForm'])->name('password.reset');
+        Route::post('/reset-password', [\LaravelApp\Http\Controllers\Auth\PasswordResetController::class, 'reset'])->name('password.update');
+    }
+
     // Protected admin routes (available when authenticated)
     Route::group(['prefix' => 'admin', 'middleware' => 'auth.dynamic'], function () {
         Route::get('/', function () {
@@ -91,17 +100,88 @@ Route::group(['middleware' => 'auth.type'], function () {
     // Dashboard routes (available when authenticated)
     Route::middleware(['auth.dynamic'])->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-        Route::get('/settings', function () {
-            return view('settings');
-        })->name('settings');
-        Route::get('/goals', function () {
-            return view('goals');
-        })->name('goals');
+
+        
+        Route::prefix('profile')->name('profile.')->group(function () {
+            // Profile routes
+            Route::get('/', [\LaravelApp\Http\Controllers\ProfileController::class, 'show'])->name('index');
+            Route::patch('/', [\LaravelApp\Http\Controllers\ProfileController::class, 'update'])->name('update');
+            Route::patch('/password', [\LaravelApp\Http\Controllers\ProfileController::class, 'updatePassword'])->name('password');
+
+            Route::get('/edit', function () {
+                return view('profile.edit');
+            })->name('edit');
+
+            Route::get('/security', function () {
+                return view('profile.edit');
+            })->name('security');
+            
+            Route::get('/notifications', function () {
+                return view('profile.edit');
+            })->name('notifications');
+            
+            Route::get('/sessions', function () {
+                return view('profile.edit');
+            })->name('sessions');
+            
+        });
+
+
+
+        Route::prefix('settings')->group(function () {
+            
+            Route::get('/', function () {
+                return view('settings.index');
+            })->name('settings.index');
+            // Users management routes
+            Route::resource('/users', \LaravelApp\Http\Controllers\UsersController::class);
+            Route::patch('/users/{user}/password', [\LaravelApp\Http\Controllers\UsersController::class, 'updatePassword'])->name('users.password');
+            Route::post('/users/{user}/reset-password', [\LaravelApp\Http\Controllers\UsersController::class, 'resetPassword'])->name('users.reset-password');
+
+            Route::prefix('setup')->group(function () {
+                // New setup routes
+                Route::get('/', function () {
+                    return view('settings.setup.index');
+                })->name('setup');
+                
+                Route::get('/authentication', function () {
+                    return view('settings.setup.authentication');
+                })->name('authentication');
+                Route::get('/tokens', function () {
+                    return view('settings.setup.tokens');
+                })->name('tokens');
+            });
+        });
+
+
+        
+
+        // Settings routes (legacy - redirect to new structure)
+        
         
         // Dashboard API routes
         Route::get('/api/dashboard/income-chart', [DashboardController::class, 'getIncomeChartData']);
         Route::get('/api/dashboard/transactions', [DashboardController::class, 'getRecentTransactions']);
         Route::post('/api/dashboard/send-money', [DashboardController::class, 'sendMoney']);
+        
+        // Notification routes
+        Route::prefix('notifications')->name('notifications.')->group(function () {
+            Route::get('/', [NotificationController::class, 'index'])->name('index');
+            Route::get('/unread-count', [NotificationController::class, 'getUnreadCount'])->name('unread-count');
+            Route::get('/recent', [NotificationController::class, 'getRecent'])->name('recent');
+            Route::patch('/{notification}/mark-as-read', [NotificationController::class, 'markAsRead'])->name('mark-as-read');
+            Route::patch('/mark-multiple-as-read', [NotificationController::class, 'markMultipleAsRead'])->name('mark-multiple-as-read');
+            Route::patch('/mark-all-as-read', [NotificationController::class, 'markAllAsRead'])->name('mark-all-as-read');
+            Route::delete('/{notification}', [NotificationController::class, 'destroy'])->name('destroy');
+            Route::delete('/bulk-delete', [NotificationController::class, 'destroyMultiple'])->name('destroy-multiple');
+            Route::delete('/clear-read', [NotificationController::class, 'clearRead'])->name('clear-read');
+            Route::delete('/clear-all', [NotificationController::class, 'clearAll'])->name('clear-all');
+            
+            // Test route for development
+            if (app()->environment('local')) {
+                Route::post('/test', [NotificationController::class, 'test'])->name('test');
+            }
+        });
     });
 
 });

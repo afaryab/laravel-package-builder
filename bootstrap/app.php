@@ -24,9 +24,4 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions) {
         //
     })
-    ->booting(function () {
-        Gate::define('viewApiDocs', function (User $user) {
-            return true;
-        });
-    })
     ->create();

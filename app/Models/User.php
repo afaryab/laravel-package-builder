@@ -28,4 +28,28 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    /**
+     * Get the user's notifications.
+     */
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
+    }
+
+    /**
+     * Get the user's unread notifications.
+     */
+    public function unreadNotifications()
+    {
+        return $this->notifications()->unread();
+    }
+
+    /**
+     * Get the count of unread notifications.
+     */
+    public function getUnreadNotificationsCountAttribute()
+    {
+        return $this->unreadNotifications()->count();
+    }
 }
