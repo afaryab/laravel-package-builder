@@ -16,14 +16,19 @@ class AuthenticateWithAuthType
      */
     public function handle(Request $request, Closure $next): Response
     {
+        $authType = env('AUTH', 'none');
+        
+        // If auth is disabled, allow all requests
+        if ($authType === 'none') {
+            return $next($request);
+        }
+        
         // If user is already authenticated, continue
         if (Auth::check()) {
             return $next($request);
         }
 
         // User is not authenticated, redirect based on AUTH type
-        $authType = env('AUTH', 'none');
-        
         switch ($authType) {
             case 'internal':
                 // Redirect to internal login page
@@ -46,7 +51,6 @@ class AuthenticateWithAuthType
                 }
                 return redirect()->route('saml.login');
                 
-            case 'none':
             default:
                 // No authentication configured or required
                 if ($request->expectsJson()) {

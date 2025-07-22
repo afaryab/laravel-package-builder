@@ -55,7 +55,13 @@
                     <p class="text-sm text-gray-500">Manage your personal information and preferences</p>
                 </div>
                 
-                @if(auth()->user()->auth_type === 'internal' || empty(auth()->user()->auth_type))
+                @if(config('auth.type') === 'none')
+                    <div class="p-6">
+                        <div class="bg-gray-50 border border-gray-200 rounded-md p-4">
+                            <p class="text-sm text-gray-600">Profile editing is disabled when authentication is turned off.</p>
+                        </div>
+                    </div>
+                @elseif((auth()->user()?->auth_type === 'internal' || empty(auth()->user()?->auth_type)) && auth()->check())
                 <form class="p-6 space-y-6" method="POST" action="{{ route('profile.update') }}">
                     @csrf
                     @method('PATCH')
@@ -94,7 +100,7 @@
                             </label>
                             <input type="text" 
                                    name="name"
-                                   value="{{ old('name', auth()->user()->name) }}"
+                                   value="{{ old('name', auth()->user()?->name ?? '') }}"
                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500 @error('name') border-red-300 @enderror"
                                    required>
                             @error('name')
@@ -107,7 +113,7 @@
                             </label>
                             <input type="email" 
                                    name="email"
-                                   value="{{ old('email', auth()->user()->email) }}"
+                                   value="{{ old('email', auth()->user()?->email ?? '') }}"
                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500 @error('email') border-red-300 @enderror"
                                    required>
                             @error('email')
@@ -132,14 +138,14 @@
                             <div class="ml-3">
                                 <h3 class="text-sm font-medium text-blue-800">External Authentication</h3>
                                 <div class="mt-2 text-sm text-blue-700">
-                                    <p>Your profile is managed through {{ ucfirst(auth()->user()->auth_type) }} authentication. To edit your profile information, please visit your identity provider.</p>
+                                    <p>Your profile is managed through {{ ucfirst(auth()->user()?->auth_type ?? 'unknown') }} authentication. To edit your profile information, please visit your identity provider.</p>
                                     <div class="mt-4">
-                                        @if(auth()->user()->auth_type === 'oauth')
+                                        @if(auth()->user()?->auth_type === 'oauth')
                                             <button onclick="alert('Please visit your OAuth provider to edit your profile.')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium">
                                                 <i class="fas fa-external-link-alt mr-2"></i>
                                                 Edit via OAuth Provider
                                             </button>
-                                        @elseif(auth()->user()->auth_type === 'saml')
+                                        @elseif(auth()->user()?->auth_type === 'saml')
                                             <button onclick="alert('Please visit your SAML identity provider to edit your profile.')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium">
                                                 <i class="fas fa-external-link-alt mr-2"></i>
                                                 Edit via Identity Provider
@@ -161,7 +167,7 @@
                     <p class="text-sm text-gray-500">Manage your password and security preferences</p>
                 </div>
                 
-                @if(auth()->user()->auth_type === 'internal' || auth()->user()->auth_type === null)
+                @if((auth()->user()?->auth_type === 'internal' || auth()->user()?->auth_type === null) && auth()->check())
                 <form class="p-6 space-y-6" method="POST" action="{{ route('profile.password') }}">
                     @csrf
                     @method('PATCH')
@@ -254,7 +260,7 @@
                                 <i class="fas fa-exclamation-triangle text-yellow-400"></i>
                             </div>
                             <div class="ml-3">
-                                <p class="text-sm font-medium text-yellow-800">Password changes are not available for {{ ucfirst(auth()->user()->auth_type) }} authentication.</p>
+                                <p class="text-sm font-medium text-yellow-800">Password changes are not available for {{ ucfirst(auth()->user()?->auth_type ?? 'unknown') }} authentication.</p>
                                 <p class="text-sm text-yellow-700 mt-1">Your password is managed by your authentication provider.</p>
                             </div>
                         </div>
@@ -479,8 +485,8 @@ function settingsData() {
         showCreateToken: false,
         
         profile: {
-            name: '@if(auth()->check()){{ auth()->user()->name }}@endif',
-            email: '@if(auth()->check()){{ auth()->user()->email }}@endif',
+            name: '@if(auth()->check()){{ auth()->user()?->name ?? "" }}@endif',
+            email: '@if(auth()->check()){{ auth()->user()?->email ?? "" }}@endif',
             phone: '',
             timezone: '',
             language: 'en'

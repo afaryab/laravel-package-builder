@@ -28,7 +28,7 @@
                     <div class="space-y-2">
                         <p class="text-orange-600">🔐 Laravel authentication enabled</p>
                         @auth
-                            <p class="text-green-600">Welcome, {{ auth()->user()->name }}!</p>
+                            <p class="text-green-600">Welcome, {{ auth()->user()?->name ?? 'User' }}!</p>
                             <a href="/admin" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 inline-block">Admin Panel</a>
                         @else
                             @if(\LaravelApp\Models\User::count() === 0)
@@ -43,7 +43,7 @@
                     <div class="space-y-2">
                         <p class="text-purple-600">🔗 SAML authentication enabled</p>
                         @auth
-                            <p class="text-green-600">Welcome, {{ auth()->user()->name }}!</p>
+                            <p class="text-green-600">Welcome, {{ auth()->user()?->name ?? 'User' }}!</p>
                             <a href="/admin" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 inline-block">Admin Panel</a>
                         @else
                             <a href="/saml/login" class="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600 inline-block">SAML Login</a>
@@ -53,7 +53,7 @@
                     <div class="space-y-2">
                         <p class="text-indigo-600">🔗 OAuth authentication enabled</p>
                         @auth
-                            <p class="text-green-600">Welcome, {{ auth()->user()->name }}!</p>
+                            <p class="text-green-600">Welcome, {{ auth()->user()?->name ?? 'User' }}!</p>
                             <a href="/admin" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 inline-block">Admin Panel</a>
                         @else
                             <a href="/oauth/redirect" class="bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600 inline-block">OAuth Login</a>

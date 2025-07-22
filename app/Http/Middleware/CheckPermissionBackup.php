@@ -43,31 +43,8 @@ class CheckPermission
         $user = Auth::user();
         
         if (!$user) {
-            return redirect()->route('login')->with('error', 'Authentication required');
+            return redirect()->route('login')->with('error', 'Access denied');
         }
-
-        // Auto-create permission if it doesn't exist (as requested)
-        if (!Permission::where('name', $permission)->exists()) {
-            Permission::findOrCreate(
-                $permission,
-                ucwords(str_replace(['.', '_'], ' ', $permission)),
-                'Auto-generated permission',
-                explode('.', $permission)[0] ?? 'general'
-            );
-        }
-
-        if (!$user->hasPermission($permission)) {
-            if ($request->expectsJson()) {
-                return response()->json([
-                    'error' => 'Insufficient permissions',
-                    'required_permission' => $permission
-                ], 403);
-            }
-
-            return redirect()->back()->with('error', 'You do not have permission to access this resource.');
-        }
-
-        return $next($request);
     }
     
     /**
@@ -132,5 +109,30 @@ class CheckPermission
         }
         
         return false;
+    }
+        }
+
+        // Auto-create permission if it doesn't exist (as requested)
+        if (!Permission::where('name', $permission)->exists()) {
+            Permission::findOrCreate(
+                $permission,
+                ucwords(str_replace(['.', '_'], ' ', $permission)),
+                'Auto-generated permission',
+                explode('.', $permission)[0] ?? 'general'
+            );
+        }
+
+        if (!$user->hasPermission($permission)) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'error' => 'Insufficient permissions',
+                    'required_permission' => $permission
+                ], 403);
+            }
+
+            return redirect()->back()->with('error', 'You do not have permission to access this resource.');
+        }
+
+        return $next($request);
     }
 }

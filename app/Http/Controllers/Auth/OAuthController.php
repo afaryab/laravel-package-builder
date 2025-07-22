@@ -58,7 +58,7 @@ class OAuthController extends Controller
         
         try {
             // Exchange code for access token
-            $tokenResponse = Http::asForm()->post(env('AUTHENTIK_BASE_URL') . env('AUTHENTIK_TOKEN_ENDPOINT'), [
+            $tokenResponse = Http::asForm()->post(env('AUTHENTIK_INTERNAL_URL', env('AUTHENTIK_BASE_URL')) . env('AUTHENTIK_TOKEN_ENDPOINT'), [
                 'grant_type' => 'authorization_code',
                 'client_id' => env('AUTHENTIK_CLIENT_ID'),
                 'client_secret' => env('AUTHENTIK_CLIENT_SECRET'),
@@ -75,7 +75,7 @@ class OAuthController extends Controller
             
             // Get user info from Authentik
             $userResponse = Http::withToken($accessToken)
-                ->get(env('AUTHENTIK_BASE_URL') . env('AUTHENTIK_USERINFO_ENDPOINT'));
+                ->get(env('AUTHENTIK_INTERNAL_URL', env('AUTHENTIK_BASE_URL')) . env('AUTHENTIK_USERINFO_ENDPOINT'));
             
             if (!$userResponse->successful()) {
                 return redirect('/')->withErrors(['error' => 'Failed to get user information']);

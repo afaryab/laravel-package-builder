@@ -18,14 +18,14 @@ class ApplicationConfigService
         // Filter menus based on user permissions and active status
         return collect($menus)
             ->filter(function ($menu) {
-                return $menu['active'] && $this->hasPermission($menu['permission']);
+                return $menu['active'] && $this->hasPermission($menu['permission']) && $this->shouldShowMenu($menu);
             })
             ->map(function ($menu) {
                 // Process submenus if they exist
                 if (isset($menu['submenu'])) {
                     $menu['submenu'] = collect($menu['submenu'])
                         ->filter(function ($submenu) {
-                            return $submenu['active'] && $this->hasPermission($submenu['permission']);
+                            return $submenu['active'] && $this->hasPermission($submenu['permission']) && $this->shouldShowSubmenu($submenu);
                         })
                         ->sortBy('order')
                         ->toArray();
@@ -62,6 +62,11 @@ class ApplicationConfigService
             return true;
         }
         
+        // If auth is disabled, allow all permissions
+        if (config('auth.type') === 'none') {
+            return true;
+        }
+        
         // Check if user is authenticated
         if (!Auth::check()) {
             return false;
@@ -72,6 +77,45 @@ class ApplicationConfigService
         
         // Check if user has the required permission
         return $user->hasPermission($permission);
+    }
+
+    /**
+     * Check if a menu should be shown based on auth configuration
+     */
+    protected function shouldShowMenu(array $menu): bool
+    {
+        // If auth is disabled, check if this menu has any valid submenus
+        if (config('auth.type') === 'none' && isset($menu['submenu'])) {
+            $allowedSubmenus = collect($menu['submenu'])
+                ->filter(function ($submenu) {
+                    return $this->shouldShowSubmenu($submenu);
+                });
+            
+            // If no submenus would be shown, hide the entire menu
+            return $allowedSubmenus->isNotEmpty();
+        }
+        
+        return true;
+    }
+
+    /**
+     * Check if a submenu should be shown based on auth configuration
+     */
+    protected function shouldShowSubmenu(array $submenu): bool
+    {
+        // If auth is disabled, hide user and access control related menus
+        if (config('auth.type') === 'none') {
+            $route = $submenu['route'] ?? '';
+            $label = strtolower($submenu['label'] ?? '');
+            
+            // Hide users and access control menus
+            if (in_array($route, ['users.index', 'access-control.index']) || 
+                in_array($label, ['users', 'access control'])) {
+                return false;
+            }
+        }
+        
+        return true;
     }
 
     /**
@@ -215,7 +259,12 @@ class ApplicationConfigService
     public function getBreadcrumb(): array
     {
         $breadcrumb = [];
-        $currentRoute = request()->route()->getName();
+        $route = request()->route();
+        $currentRoute = $route ? $route->getName() : null;
+        
+        if (!$currentRoute) {
+            return $breadcrumb;
+        }
         
         // Check backend menus
         foreach ($this->getBackendMenus() as $key => $menu) {

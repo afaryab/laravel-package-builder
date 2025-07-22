@@ -6,7 +6,7 @@
 <div class="p-6" x-data="dashboardData()">
     <!-- Header -->
     <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900">Good Morning, {{ auth()->user()->name ?? 'User' }}!</h1>
+        <h1 class="text-3xl font-bold text-gray-900">Good Morning, {{ auth()->user()?->name ?? 'User' }}!</h1>
         <p class="text-gray-600 mt-1">Welcome to your Admin Dashboard</p>
     </div>
 

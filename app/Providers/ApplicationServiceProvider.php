@@ -27,6 +27,9 @@ class ApplicationServiceProvider extends ServiceProvider
     {
         // Custom Blade directive for permission checking
         Blade::if('permission', function ($permission) {
+            // If auth is disabled, allow all permissions
+            if (config('auth.type') === 'none') return true;
+            
             if (!Auth::check()) return false;
             /** @var User $user */
             $user = Auth::user();
@@ -35,6 +38,9 @@ class ApplicationServiceProvider extends ServiceProvider
 
         // Custom Blade directive for role checking
         Blade::if('role', function ($role) {
+            // If auth is disabled, allow all roles
+            if (config('auth.type') === 'none') return true;
+            
             if (!Auth::check()) return false;
             /** @var User $user */
             $user = Auth::user();
@@ -43,6 +49,9 @@ class ApplicationServiceProvider extends ServiceProvider
 
         // Custom Blade directive for multiple permission checking (any)
         Blade::if('anyPermission', function (...$permissions) {
+            // If auth is disabled, allow all permissions
+            if (config('auth.type') === 'none') return true;
+            
             if (!Auth::check()) return false;
             /** @var User $user */
             $user = Auth::user();
@@ -51,6 +60,9 @@ class ApplicationServiceProvider extends ServiceProvider
 
         // Custom Blade directive for multiple permission checking (all)
         Blade::if('allPermissions', function (...$permissions) {
+            // If auth is disabled, allow all permissions
+            if (config('auth.type') === 'none') return true;
+            
             if (!Auth::check()) return false;
             /** @var User $user */
             $user = Auth::user();

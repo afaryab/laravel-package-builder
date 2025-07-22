@@ -21,6 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'auth.dynamic' => LaravelApp\Http\Middleware\AuthenticateWithAuthType::class,
             'log.activity' => LaravelApp\Http\Middleware\LogActivity::class,
             'permission' => LaravelApp\Http\Middleware\CheckPermission::class,
+            'disable.auth.routes' => LaravelApp\Http\Middleware\DisableAuthRelatedRoutes::class,
         ]);
         
         // Add LogActivity middleware globally to capture all requests

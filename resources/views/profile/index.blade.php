@@ -13,19 +13,23 @@
                     <p class="mt-1 text-sm text-gray-500">View your personal information and account details</p>
                 </div>
                 <div class="mt-4 md:mt-0">
-                    @if(auth()->user()->auth_type === 'internal' || empty(auth()->user()->auth_type))
+                    @if(config('auth.type') === 'none')
+                        <div class="text-center">
+                            <p class="text-sm text-gray-600">Profile management is disabled when authentication is turned off</p>
+                        </div>
+                    @elseif((auth()->user()?->auth_type === 'internal' || empty(auth()->user()?->auth_type)) && auth()->check())
                         <a href="{{ route('profile.edit') }}" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm font-medium">
                             Edit Profile
                         </a>
-                    @else
+                    @elseif(auth()->check())
                         <div class="text-center">
-                            <p class="text-sm text-gray-600 mb-2">Profile managed by {{ ucfirst(auth()->user()->auth_type) }}</p>
-                            @if(auth()->user()->auth_type === 'oauth')
+                            <p class="text-sm text-gray-600 mb-2">Profile managed by {{ ucfirst(auth()->user()?->auth_type ?? 'unknown') }}</p>
+                            @if(auth()->user()?->auth_type === 'oauth')
                                 <a href="#" onclick="alert('Please visit your OAuth provider to edit your profile.')" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md text-sm font-medium">
                                     <i class="fas fa-external-link-alt mr-2"></i>
                                     Edit via OAuth Provider
                                 </a>
-                            @elseif(auth()->user()->auth_type === 'saml')
+                            @elseif(auth()->user()?->auth_type === 'saml')
                                 <a href="#" onclick="alert('Please visit your SAML identity provider to edit your profile.')" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md text-sm font-medium">
                                     <i class="fas fa-external-link-alt mr-2"></i>
                                     Edit via Identity Provider
@@ -43,14 +47,14 @@
                         <div class="px-6 py-4">
                             <div class="flex flex-col items-center">
                                 <div class="flex-shrink-0">
-                                    <img class="h-24 w-24 rounded-full" src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&background=667eea&color=fff&size=200" alt="{{ auth()->user()->name }}">
+                                    <img class="h-24 w-24 rounded-full" src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()?->name ?? 'User') }}&background=667eea&color=fff&size=200" alt="{{ auth()->user()?->name ?? 'User' }}">
                                 </div>
                                 <div class="mt-4 text-center">
-                                    <h3 class="text-xl font-medium text-gray-900">{{ auth()->user()->name }}</h3>
-                                    <p class="text-sm text-gray-500">{{ auth()->user()->email }}</p>
+                                    <h3 class="text-xl font-medium text-gray-900">{{ auth()->user()?->name ?? 'User' }}</h3>
+                                    <p class="text-sm text-gray-500">{{ auth()->user()?->email ?? 'No email' }}</p>
                                     <div class="mt-2">
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
-                                            {{ ucfirst(auth()->user()->auth_type ?? 'internal') }} User
+                                            {{ ucfirst(auth()->user()?->auth_type ?? 'internal') }} User
                                         </span>
                                     </div>
                                 </div>
@@ -60,15 +64,15 @@
                             <dl class="grid grid-cols-1 gap-x-4 gap-y-4">
                                 <div>
                                     <dt class="text-sm font-medium text-gray-500">Member since</dt>
-                                    <dd class="text-sm text-gray-900">{{ auth()->user()->created_at->format('M d, Y') }}</dd>
+                                    <dd class="text-sm text-gray-900">{{ auth()->user()?->created_at?->format('M d, Y') ?? 'N/A' }}</dd>
                                 </div>
                                 <div>
                                     <dt class="text-sm font-medium text-gray-500">Last updated</dt>
-                                    <dd class="text-sm text-gray-900">{{ auth()->user()->updated_at->format('M d, Y') }}</dd>
+                                    <dd class="text-sm text-gray-900">{{ auth()->user()?->updated_at?->format('M d, Y') ?? 'N/A' }}</dd>
                                 </div>
                                 <div>
                                     <dt class="text-sm font-medium text-gray-500">User ID</dt>
-                                    <dd class="text-sm text-gray-900">#{{ auth()->user()->id }}</dd>
+                                    <dd class="text-sm text-gray-900">#{{ auth()->user()?->id ?? 'N/A' }}</dd>
                                 </div>
                             </dl>
                         </div>
@@ -86,15 +90,15 @@
                             <dl class="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
                                 <div>
                                     <dt class="text-sm font-medium text-gray-500">Full Name</dt>
-                                    <dd class="mt-1 text-sm text-gray-900">{{ auth()->user()->name }}</dd>
+                                    <dd class="mt-1 text-sm text-gray-900">{{ auth()->user()?->name ?? 'User' }}</dd>
                                 </div>
                                 <div>
                                     <dt class="text-sm font-medium text-gray-500">Email Address</dt>
-                                    <dd class="mt-1 text-sm text-gray-900">{{ auth()->user()->email }}</dd>
+                                    <dd class="mt-1 text-sm text-gray-900">{{ auth()->user()?->email ?? 'No email' }}</dd>
                                 </div>
                                 <div>
                                     <dt class="text-sm font-medium text-gray-500">Authentication Type</dt>
-                                    <dd class="mt-1 text-sm text-gray-900">{{ ucfirst(auth()->user()->auth_type ?? 'internal') }}</dd>
+                                    <dd class="mt-1 text-sm text-gray-900">{{ ucfirst(auth()->user()?->auth_type ?? 'internal') }}</dd>
                                 </div>
                                 <div>
                                     <dt class="text-sm font-medium text-gray-500">Account Status</dt>
@@ -146,7 +150,7 @@
                                                 <p class="text-sm text-gray-500">Account was created</p>
                                             </div>
                                             <div class="text-sm text-gray-500">
-                                                {{ auth()->user()->created_at->diffForHumans() }}
+                                                {{ auth()->user()?->created_at?->diffForHumans() ?? 'N/A' }}
                                             </div>
                                         </div>
                                     </li>

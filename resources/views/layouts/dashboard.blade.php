@@ -196,92 +196,102 @@
                         </div>
                     </div>
                     <div class="ml-4 flex items-center md:ml-6">
-                        <!-- Notifications Dropdown -->
-                        <div class="relative mr-3" x-data="{ open: false, unreadCount: {{ auth()->user()->unread_notifications_count }} }">
-                            <button @click="open = !open; if (open) loadNotifications()" 
-                                    class="relative bg-gray-100 p-2 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                <x-heroicon-o-bell class="w-5 h-5" />
-                                <span x-show="unreadCount > 0" 
-                                      x-text="unreadCount" 
-                                      class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                                </span>
-                            </button>
-                            
-                            <div x-show="open" 
-                                 @click.away="open = false" 
-                                 x-transition 
-                                 class="origin-top-right absolute right-0 mt-2 w-80 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
-                                <div class="py-1">
-                                    <div class="px-4 py-3 border-b border-gray-200">
-                                        <div class="flex items-center justify-between">
-                                            <h3 class="text-sm font-medium text-gray-900">Notifications</h3>
-                                            <button @click="markAllAsRead()" 
-                                                    x-show="unreadCount > 0"
-                                                    class="text-xs text-blue-600 hover:text-blue-800">
-                                                Mark all read
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div id="notifications-dropdown-content">
-                                        <div class="px-4 py-8 text-center">
-                                            <x-heroicon-o-arrow-path class="w-5 h-5 animate-spin text-gray-400 mx-auto" />
-                                            <p class="text-sm text-gray-500 mt-2">Loading...</p>
-                                        </div>
-                                    </div>
-                                    <div class="border-t border-gray-200">
-                                        <a href="{{ route('notifications.index') }}" 
-                                           class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 text-center">
-                                            <x-heroicon-o-bell class="w-4 h-4 inline mr-2" />
-                                            View All Notifications
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="ml-3 relative" x-data="{ open: false }">
-                            <div>
-                                <button @click="open = !open" class="max-w-xs bg-white flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                    <img class="h-8 w-8 rounded-full" src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name ?? 'User') }}&background=667eea&color=fff" alt="{{ auth()->user()->name ?? 'User' }}">
-                                    <span class="ml-3 text-gray-700 text-sm font-medium">{{ auth()->user()->name ?? 'User' }}</span>
-                                    <x-heroicon-o-chevron-down class="ml-2 w-3 h-3 text-gray-400" />
+                        @if(config('auth.type') !== 'none' && auth()->check())
+                            <!-- Notifications Dropdown -->
+                            <div class="relative mr-3" x-data="{ open: false, unreadCount: {{ auth()->user()?->unread_notifications_count ?? 0 }} }">
+                                <button @click="open = !open; if (open) loadNotifications()" 
+                                        class="relative bg-gray-100 p-2 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                    <x-heroicon-o-bell class="w-5 h-5" />
+                                    <span x-show="unreadCount > 0" 
+                                          x-text="unreadCount" 
+                                          class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                                    </span>
                                 </button>
-                            </div>
-                            <div x-show="open" @click.away="open = false" x-transition class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-                                <div class="py-1">
-                                    <!-- Profile Section with Submenu -->
-                                    <div class="relative">
-                                        <a href="{{ route('profile.index') }}" class="w-full flex items-center justify-between px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                            <div class="flex items-center">
-                                                <x-heroicon-o-user class="w-4 h-4 mr-2" />
-                                                Profile
+                                
+                                <div x-show="open" 
+                                     @click.away="open = false" 
+                                     x-transition 
+                                     class="origin-top-right absolute right-0 mt-2 w-80 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
+                                    <div class="py-1">
+                                        <div class="px-4 py-3 border-b border-gray-200">
+                                            <div class="flex items-center justify-between">
+                                                <h3 class="text-sm font-medium text-gray-900">Notifications</h3>
+                                                <button @click="markAllAsRead()" 
+                                                        x-show="unreadCount > 0"
+                                                        class="text-xs text-blue-600 hover:text-blue-800">
+                                                    Mark all read
+                                                </button>
                                             </div>
-                                            <x-heroicon-o-chevron-right class="w-3 h-3 text-gray-400" />
-                                        </a>
+                                        </div>
+                                        <div id="notifications-dropdown-content">
+                                            <div class="px-4 py-8 text-center">
+                                                <x-heroicon-o-arrow-path class="w-5 h-5 animate-spin text-gray-400 mx-auto" />
+                                                <p class="text-sm text-gray-500 mt-2">Loading...</p>
+                                            </div>
+                                        </div>
+                                        <div class="border-t border-gray-200">
+                                            <a href="{{ route('notifications.index') }}" 
+                                               class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 text-center">
+                                                <x-heroicon-o-bell class="w-4 h-4 inline mr-2" />
+                                                View All Notifications
+                                            </a>
+                                        </div>
                                     </div>
-                                    
-                                    <!-- Divider -->
-                                    <div class="border-t border-gray-100 my-1"></div>
-                                    
-                                    <!-- Settings -->
-                                    <a href="{{ route('settings.index') }}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                        <x-heroicon-o-cog-6-tooth class="w-4 h-4 mr-2" />
-                                        Settings
-                                    </a>
-                                    
-                                    <!-- Divider -->
-                                    <div class="border-t border-gray-100 my-1"></div>
-                                    
-                                    <!-- Logout -->
-                                    <form method="POST" action="{{ route('logout') }}" class="block">
-                                        @csrf
-                                        <button type="submit" class="w-full flex items-center text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                            <x-heroicon-o-arrow-right-on-rectangle class="w-4 h-4 mr-2" />
-                                            Sign out
-                                        </button>
-                                    </form>
                                 </div>
                             </div>
-                        </div>
+                            <div class="ml-3 relative" x-data="{ open: false }">
+                                <div>
+                                    <button @click="open = !open" class="max-w-xs bg-white flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                        <img class="h-8 w-8 rounded-full" src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()?->name ?? 'User') }}&background=667eea&color=fff" alt="{{ auth()->user()?->name ?? 'User' }}">
+                                        <span class="ml-3 text-gray-700 text-sm font-medium">{{ auth()->user()?->name ?? 'User' }}</span>
+                                        <x-heroicon-o-chevron-down class="ml-2 w-3 h-3 text-gray-400" />
+                                    </button>
+                                </div>
+                                <div x-show="open" @click.away="open = false" x-transition class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+                                    <div class="py-1">
+                                        <!-- Profile Section with Submenu -->
+                                        <div class="relative">
+                                            <a href="{{ route('profile.index') }}" class="w-full flex items-center justify-between px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                                <div class="flex items-center">
+                                                    <x-heroicon-o-user class="w-4 h-4 mr-2" />
+                                                    Profile
+                                                </div>
+                                                <x-heroicon-o-chevron-right class="w-3 h-3 text-gray-400" />
+                                            </a>
+                                        </div>
+                                        
+                                        <!-- Divider -->
+                                        <div class="border-t border-gray-100 my-1"></div>
+                                        
+                                        <!-- Settings -->
+                                        <a href="{{ route('settings.index') }}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                            <x-heroicon-o-cog-6-tooth class="w-4 h-4 mr-2" />
+                                            Settings
+                                        </a>
+                                        
+                                        <!-- Divider -->
+                                        <div class="border-t border-gray-100 my-1"></div>
+                                        
+                                        <!-- Logout -->
+                                        <form method="POST" action="{{ route('logout') }}" class="block">
+                                            @csrf
+                                            <button type="submit" class="w-full flex items-center text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                                <x-heroicon-o-arrow-right-on-rectangle class="w-4 h-4 mr-2" />
+                                                Sign out
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        @else
+                            <!-- No Auth Mode - Simple indicator -->
+                            <div class="flex items-center">
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                    <x-heroicon-o-shield-exclamation class="w-4 h-4 mr-1" />
+                                    No Auth Mode
+                                </span>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>

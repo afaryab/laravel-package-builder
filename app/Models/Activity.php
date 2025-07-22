@@ -84,9 +84,9 @@ class Activity extends Model
                 'email' => $this->user->email,
                 'avatar' => 'https://ui-avatars.com/api/?name=' . urlencode($this->user->name) . '&background=667eea&color=fff'
             ] : [
-                'name' => 'System',
-                'email' => 'system@' . config('app.name', 'app') . '.com',
-                'avatar' => 'https://ui-avatars.com/api/?name=System&background=6c757d&color=fff'
+                'name' => 'Someone',
+                'email' => 'anonymous@' . config('app.name', 'app') . '.com',
+                'avatar' => 'https://ui-avatars.com/api/?name=Someone&background=6c757d&color=fff'
             ],
             'time' => $this->created_at->diffForHumans(),
             'date' => $this->created_at->format('d M Y'),
@@ -96,5 +96,13 @@ class Activity extends Model
             'request_url' => $this->request_url,
             'ip_address' => $this->ip_address
         ];
+    }
+
+    /**
+     * Get the display name for the user who performed this activity
+     */
+    public function getUserDisplayNameAttribute()
+    {
+        return $this->user ? $this->user->name : 'Someone';
     }
 }

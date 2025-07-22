@@ -114,7 +114,7 @@
                     <div class="flex items-center justify-between">
                         <span class="text-sm text-gray-700">Active Tokens</span>
                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                            {{ auth()->user()->tokens()->count() ?? 0 }}
+                            {{ auth()->user()?->tokens()?->count() ?? 0 }}
                         </span>
                     </div>
                     <div class="flex items-center justify-between">
